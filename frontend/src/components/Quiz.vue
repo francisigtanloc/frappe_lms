@@ -152,7 +152,7 @@
 							{{ questionDetails.data[`explanation_${index}`] }}
 						</div>
 					</div>
-					<div v-else v-for="index in 4">
+					<div v-else v-for="index in shuffledArray">
 						<label
 							v-if="questionDetails.data[`option_${index}`]"
 							class="flex items-center bg-gray-200 rounded-md p-3 mt-4 w-full cursor-pointer focus:border-blue-600"
@@ -218,9 +218,19 @@
 							{{ questionDetails.data[`explanation_${index}`] }}
 						</div>
 					</div>
+					
 					<div class="flex items-center justify-between mt-8">
+						
 						<div class="countdown-timer">
 							<div>Remaining Time : {{ formatTime }} seconds</div>
+							<div class="progress timer w-100" data-time="{{ quiz.data.time }}">
+								
+								<div class="progress-bar"
+								:style="{ width: percentTime.percent_time + '%', backgroundColor: percentTime.color }"
+								:aria-valuenow="percentTime.percent_time"
+								:aria-valuemax="percentTime.percent_time">
+								</div>
+							</div>
 						</div>
 						<div>
 							{{
@@ -320,14 +330,14 @@
 							<div>
 							<!-- Pagination buttons -->
 							<div class="pagination">
-							<Button v-for="(item, index) in people" :key="index" @click="scrollToItem(item.name)" :class="{ 'red-button': index == 0 }">
+							<Button v-for="(item, index) in people" :key="index" @click="scrollToItem(item.name)" :class="{ 'bg-red-400': index == 0 ,'bg-green-400': index == 2 }">
 								{{ index + 1 }}
 							</Button>
 							</div>
 							
 							<!-- List items -->
 							<div class="list" ref="list">
-							<div v-for="(item, index) in people" :key="index" class="item" :id = "item.name" >
+							<div v-for="(item, index) in people" :key="index" class="item" :id = "item.name" :submission="item.name" >
 								name : {{ item.name }} <br></br>
 								email : {{ item.email }} <br></br>
 								age :{{ item.age }} <br></br>
@@ -356,7 +366,7 @@ import {
 import { ref, watch, reactive, inject } from 'vue'
 import { computed, onMounted, onUnmounted } from 'vue';
 import { createToast } from '@/utils/'
-import { CheckCircle, XCircle, MinusCircle } from 'lucide-vue-next'
+import { CheckCircle, XCircle, MinusCircle, ExternalLinkIcon } from 'lucide-vue-next'
 import { timeAgo } from '@/utils'
 const user = inject('$user')
 
@@ -397,11 +407,16 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	// submissionName: {
+	// 	type: String,
+	// 	required: true,
+	// },
 })
 
 const quiz = createResource({
 	url: 'frappe.client.get',
 	makeParams(values) {
+		console.log(props.quizName)
 		return {
 			doctype: 'LMS Quiz',
 			name: props.quizName,
@@ -415,6 +430,22 @@ const quiz = createResource({
 		}
 	},
 })
+// const submission = createResource({
+// 	url: 'frappe.client.get',
+// 	makeParams(values) {
+// 		return {
+// 			doctype: 'LMS Quiz',
+// 			name: props.submissionName,
+// 		}
+// 	},
+// 	cache: ['submissionName', props.submissionName],
+// 	auto: true,
+// 	onSuccess(data) {
+// 		if (data.shuffle_questions) {
+// 			data.questions = data.questions.sort(() => Math.random() - 0.5)
+// 		}
+// 	},
+// })
 
 
 const attempts = createResource({
@@ -433,6 +464,8 @@ const attempts = createResource({
 				'score_out_of',
 				'percentage',
 				'passing_percentage',
+				'result',
+				
 			],
 			order_by: 'creation desc',
 		}
@@ -451,10 +484,31 @@ const attempts = createResource({
 			
 			// // Add data-id attribute to "x"
 			// submission.button.setAttribute('data-id', 'x');
+
+			submission.result = createResource({
+			url: 'frappe.client.get_list',
+			makeParams(values) {
+				return {
+					doctype: 'LMS Quiz Result',
+					filters: {
+					},
+					fields: [
+						'name'
+					],
+					order_by: 'creation desc',
+				}
+			},
+			transform(data) {
+				
+			},
+			})
+
+
 			
 		})
 	},
 })
+console.log(attempts);
 
 watch(
 	() => quiz.data,
@@ -499,7 +553,13 @@ watch(
 		if (newName) {
 			quiz.reload()
 		}
-	}
+	},
+	// () => props.submissionName,
+	// (newName) => {
+	// 	if (newName) {
+	// 		quiz.reload()
+	// 	}
+	// }
 )
 
 const startQuiz = () => {
@@ -507,7 +567,14 @@ const startQuiz = () => {
 	activeQuestion.value = 1
 	localStorage.removeItem(quiz.data.title)
 }
-const shuffledArray = (array) => {
+// var formatTime = computed(() => {
+	
+// 	return countdownSeconds.value;
+// });
+
+
+const shuffledArray = computed(() => {
+	let array = [1,2,3,4]
 	let currentIndex = array.length;
 	let temporaryValue, randomIndex;
 
@@ -524,7 +591,7 @@ const shuffledArray = (array) => {
 	}
 
 	return array;
-}
+})
 
 
 const markAnswer = (index) => {
@@ -701,8 +768,31 @@ const startTimer = () => {
 	
   };
 var formatTime = computed(() => {
+
 	return countdownSeconds.value;
 });
+var percentTime = computed(() => {
+	// alert ((countdownSeconds.value / quiz.data.time) * 100);
+	// return (countdownSeconds.value  / quiz.data.time) * 100;
+	let percent_time = (countdownSeconds.value  / quiz.data.time) * 100;
+	return { percent_time: percent_time, 
+			 color: (percent_time < 20 ? 'red' : 'black'), 
+			  }
+});
+
+// var progressBarWidth = computed(() => {
+// 	console.log(percentTime)
+// 	return percentTime;
+
+// });
+// var progressBarColor = computed(() => {
+
+// 	return percentTime < 100 ? 'red' : 'var(--primary-color)';
+
+// });
+
+	
+
 
 
 </script>
@@ -727,10 +817,29 @@ var formatTime = computed(() => {
 }
 </style> -->
 
-<style>
+<style scoped>
+.progress {
+    width: 100%;
+    height: 4px;
+}
+.progress, .progress-bar {
+    box-shadow: none;
+}
 .slide-in {
   transition: max-height 0.5s ease-in-out;
   max-height: 100px; /* Set a reasonable max height */
+}
+.w-75 {
+    width: 75% !important;
+}
+.progress {
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0.75rem;
+    background-color: #ededed;
+    border-radius: var(--border-radius);
 }
 
 .slide-out {
