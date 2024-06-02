@@ -29,6 +29,31 @@
 						{{ __('Continue Learning') }}
 					</span>
 				</Button>
+				
+			</router-link>
+			<div  class="text-2xl font-semibold mb-3">
+			</div>
+			<router-link
+				v-if="course.data.membership"
+				:to="{
+					name: 'Lesson',
+					params: {
+						courseName: course.name,
+						chapterNumber: course.data.current_lesson
+							? course.data.current_lesson.split('.')[0]
+							: 1,
+						lessonNumber: course.data.current_lesson
+							? course.data.current_lesson.split('.')[1]
+							: 1,
+					},
+				}"
+			>
+				<Button variant="solid" size="md" class="w-full">
+					<span>
+						{{ __('Manage Course') }}
+					</span>
+				</Button>
+				
 			</router-link>
 			<router-link
 				v-else-if="course.data.paid_course"
