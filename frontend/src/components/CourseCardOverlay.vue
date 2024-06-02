@@ -36,7 +36,7 @@
 			<router-link
 				v-if="course.data.membership"
 				:to="{
-					name: 'Lesson',
+					name: 'ManageCourse',
 					params: {
 						courseName: course.name,
 						chapterNumber: course.data.current_lesson

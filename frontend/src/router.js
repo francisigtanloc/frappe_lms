@@ -96,6 +96,12 @@ const routes = [
 		props: true,
 	},
 	{
+		path: '/courses/:courseName/manage',
+		name: 'ManageCourse',
+		component: () => import('@/pages/ManageCourse.vue'),
+		props: true,
+	},
+	{
 		path: '/courses/:courseName/edit',
 		name: 'CreateCourse',
 		component: () => import('@/pages/CreateCourse.vue'),
