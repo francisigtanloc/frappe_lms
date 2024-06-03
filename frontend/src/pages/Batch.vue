@@ -220,22 +220,11 @@ const isStudent = computed(() => {
 const tabIndex = ref(0)
 const tabs = computed(() => {
 	let batchTabs = []
-	if (isStudent.value) {
-		batchTabs.push({
-			label: 'Dashboard',
-			icon: LayoutDashboard,
-		})
-	}
-	if (user.data?.is_moderator) {
-		batchTabs.push({
-			label: 'Students',
-			icon: Contact2,
-		})
-		batchTabs.push({
-			label: 'Assessments',
-			icon: BookOpenCheck,
-		})
-	}
+	batchTabs.push({
+		label: 'Dashboard',
+		icon: LayoutDashboard,
+	})
+
 	batchTabs.push({
 		label: 'Live Class',
 		icon: Laptop,
