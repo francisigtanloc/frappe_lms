@@ -61,6 +61,7 @@
    "default": "0",
    "fieldname": "time",
    "fieldtype": "Int",
+   "hidden": 1,
    "label": "Time Per Question (in Seconds)"
   },
   {
@@ -156,7 +157,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-27 09:56:37.678398",
+ "modified": "2024-06-03 10:06:29.406644",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS Quiz",

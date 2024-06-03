@@ -218,12 +218,7 @@
 							{{ questionDetails.data[`explanation_${index}`] }}
 						</div>
 					</div>
-					
-					<div class="flex items-center justify-between mt-8">
-						
-						<div class="countdown-timer">
-							<div>Remaining Time : {{ formatTime }} seconds</div>
-							<div class="progress timer w-100" data-time="{{ quiz.data.time }}">
+					<div class="progress timer w-100" data-time="{{ quiz.data.time }}">
 								
 								<div class="progress-bar"
 								:style="{ width: percentTime.percent_time + '%', backgroundColor: percentTime.color }"
@@ -231,6 +226,12 @@
 								:aria-valuemax="percentTime.percent_time">
 								</div>
 							</div>
+					<div class="flex items-center justify-between mt-8">
+					</div>
+					<div class="mt-8">
+						<div class="countdown-timer">
+							<div>Remaining Time : {{ formatTime }} seconds</div>
+							
 						</div>
 						<div>
 							{{
