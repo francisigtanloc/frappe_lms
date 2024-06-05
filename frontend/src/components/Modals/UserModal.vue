@@ -2,7 +2,7 @@
 	<Dialog
 		v-model="show"
 		:options="{
-			title: __('Add a Student'),
+			title: __('Add a User'),
 			size: 'sm',
 			actions: [
 				{
@@ -15,31 +15,35 @@
 	>
 		<template #body-content>
 			<div class="flex flex-col gap-4">
-
-				<Link
-					label="Student"
-					doctype="User"
-					v-model="student"
-					:filters="{ ignore_user_type: 1}"
-				/>
-				<Link
-					label="Instructor"
-					doctype="Course Instructor"
-					v-model="instructor"
-					:filters="{ parent : props.courseName}"
-				/>
+                <TextInput
+                    label="Email"
+                    type="text"
+                    placeholder="Email"
+                    v-model="email"
+                    :debounce="300"
+                    class="flex-1"
+                />
+                <TextInput
+                    label="First Name"
+                    type="text"
+                    placeholder="First Name"
+                    v-model="first_name"
+                    :debounce="300"
+                    class="flex-1"
+                />
+				
 			</div>
 		</template>
 	</Dialog>
 </template>
 <script setup>
-import { Dialog, createResource } from 'frappe-ui'
+import { TextInput, Dialog, createResource } from 'frappe-ui'
 import { ref } from 'vue'
 import Link from '@/components/Controls/Link.vue'
 
 const students = defineModel('reloadStudents')
-const student = ref()
-const instructor = ref()
+const email = ref()
+const first_name = ref()
 const show = defineModel()
 
 const props = defineProps({
@@ -54,14 +58,12 @@ const studentResource = createResource({
 	makeParams(values) {
 		return {
 			doc: {
-				doctype: 'LMS Enrollment',
+				doctype: 'User',
 				// parent: props.courseName,
 				// parenttype: 'LMS Batch',
 				// parentfield: 'students',
-				member: student.value,
-				course: props.courseName,
-				instructor: instructor.value,
-
+				first_name: first_name.value,
+				email: email.value,
 			},
 		}
 	},

@@ -55,7 +55,7 @@
 								<LiveClass :batch="batch.data.name" />
 							</div>
 							<div v-else-if="tab.label == 'Students'">
-								<courseStudents :batch="courseName" />
+								<CourseStudents :courseName="courseName" />
 							</div>
 							<div v-else-if="tab.label == 'Assessments'">
 								<Assessments :batch="batch.data.name" />
@@ -106,7 +106,7 @@ import BatchDashboard from '@/components/BatchDashboard.vue'
 import BatchCourses from '@/components/BatchCourses.vue'
 import LiveClass from '@/components/LiveClass.vue'
 import BatchStudents from '@/components/BatchStudents.vue'
-import courseStudents from '@/components/CourseStudents.vue'
+import CourseStudents from '@/components/CourseStudents.vue'
 import Assessments from '@/components/Assessments.vue'
 import Announcements from '@/components/Annoucements.vue'
 import AnnouncementModal from '@/components/Modals/AnnouncementModal.vue'

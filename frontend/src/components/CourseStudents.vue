@@ -67,7 +67,7 @@
 		{{ __('There are no students in this Course.') }}
 	</div>
 	<StudentModal
-		:batch="props.batch"
+		:courseName=courseName
 		v-model="showStudentModal"
 		v-model:reloadStudents="students"
 	/>
@@ -92,25 +92,25 @@ import StudentModal from '@/components/Modals/StudentModal.vue'
 const showStudentModal = ref(false)
 
 const props = defineProps({
-	course: {
+	courseName: {
 		type: String,
 		default: null,
 	},
 })
-const students = {data: [
-        { full_name: 'John', email: 'john@example.com', quiz_completed: "1", assessments_completed: '2',last_login: "2024-02-04" },
-        { full_name: 'Alice', email: 'alice@example.com', quiz_completed: "2", assessments_completed: '2',last_login: "2024-06-01" },
-        { full_name: 'Bob', email: 'bob@example.com', quiz_completed: "3", assessments_completed: '1',last_login: "2024-03-24" }
-      ]};
-// const students = createResource({
-// 	url: 'lms.lms.utils.get_course_students',
-// 	cache: ['students', props.course],
-// 	params: {
-// 		batch: props.course,
-// 	},
-// 	auto: true,
-// })
-
+// const students = {data: [
+//         { full_name: 'John', email: 'john@example.com', quiz_completed: "1", assessments_completed: '2',last_login: "2024-02-04" },
+//         { full_name: 'Alice', email: 'alice@example.com', quiz_completed: "2", assessments_completed: '2',last_login: "2024-06-01" },
+//         { full_name: 'Bob', email: 'bob@example.com', quiz_completed: "3", assessments_completed: '1',last_login: "2024-03-24" }
+//       ]};
+const students = createResource({
+	url: 'lms.lms.utils.get_course_students',
+	cache: ['students', props.courseName],
+	params: {
+		course: props.courseName,
+	},
+	auto: true,
+})
+console.log(students)
 const getStudentColumns = () => {
 	return [
 		{
@@ -128,11 +128,11 @@ const getStudentColumns = () => {
 			key: 'quiz_completed',
 			align: 'center',
 		},
-		// {
-		// 	label: 'Assessments Done',
-		// 	key: 'assessments_completed',
-		// 	align: 'center',
-		// },
+		{
+			label: 'Instructor',
+			key: 'instructor',
+			align: 'center',
+		},
 		{
 			label: 'Last Login',
 			key: 'last_login',

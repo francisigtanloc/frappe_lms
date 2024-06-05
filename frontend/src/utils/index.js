@@ -351,6 +351,11 @@ export function getSidebarLinks() {
 			icon: TrendingUp,
 			to: 'Statistics',
 		},
+		{
+			label: 'Users',
+			icon: TrendingUp,
+			to: 'Users',
+		},
 	]
 }
 

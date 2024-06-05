@@ -136,6 +136,11 @@ const routes = [
 		name: 'CertifiedParticipants',
 		component: () => import('@/pages/CertifiedParticipants.vue'),
 	},
+	{
+		path: '/users',
+		name: 'Users',
+		component: () => import('@/pages/Users.vue'),
+	},
 ]
 
 let router = createRouter({

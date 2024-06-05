@@ -1817,3 +1817,70 @@ def get_roles(name):
 		"batch_evaluator": has_course_evaluator_role(name),
 		"lms_student": has_student_role(name),
 	}
+
+# Added by francis
+@frappe.whitelist()
+def get_course_students(course):
+	students = []
+
+	students_list = frappe.get_all(
+		"LMS Enrollment", filters={"course": course}, fields=["name","member","instructor"]
+	)
+	# instructor = frappe.get_all("Batch Course", {"parent": batch}, pluck="course")
+
+	# assessments = frappe.get_all(
+	# 	"LMS Assessment",
+	# 	filters={"parent": batch},
+	# 	fields=["name", "assessment_type", "assessment_name"],
+	# )
+
+	for student in students_list:
+		quiz_completed = 0
+		assessments_completed = 0
+		detail = frappe.db.get_value(
+			"User",
+			student.member,
+			["full_name", "email", "username", "last_active", "user_image"],
+			as_dict=True,
+		)
+		details = {
+			"full_name" : detail.full_name,
+			"email" : detail.email,
+			"last_login" : format_datetime(detail.last_active, "dd MMM YY"),
+			"instructor" : student.instructor,
+			"quiz_completed" : "0" 
+		}
+		
+		students.append(details)
+
+		# for course in batch_courses:
+		# 	progress = frappe.db.get_value(
+		# 		"LMS Enrollment", {"course": course, "member": student.student}, "progress"
+		# 	)
+
+		# 	if progress == 100:
+		# 		courses_completed += 1
+
+		# detail.quiz_completed = quiz_completed
+
+		# for assessment in assessments:
+		# 	if has_submitted_assessment(
+		# 		assessment.assessment_name, assessment.assessment_type, student.student
+		# 	):
+		# 		assessments_completed += 1
+
+		# detail.assessments_completed = assessments_completed
+
+	return students
+
+@frappe.whitelist()
+def get_users(user):
+	students = []
+
+	students_list = frappe.get_all(
+		"User", filters={}, fields=["*"],
+	)
+	print(students_list)
+	
+	return students_list
+
