@@ -152,6 +152,23 @@
 							type="date"
 							class="mb-5"
 						/>
+						
+					</div>
+					<div class="container border-t">
+						<div class="text-lg font-semibold mt-5 mb-4">
+							{{ __('Lesson Progression') }}
+						</div>
+						<div
+							v-if="user.data?.is_moderator"
+							class="flex items-center justify-between mb-4"
+						>
+							<FormControl
+								type="checkbox"
+								v-model="course.is_linear"
+								:label="__('Is Linear')"
+							/>
+							
+						</div>
 					</div>
 					<div class="container border-t">
 						<div class="text-lg font-semibold mt-5 mb-4">
@@ -230,6 +247,7 @@ const course = reactive({
 	upcoming: false,
 	disable_self_learning: false,
 	paid_course: false,
+	is_linear: false,
 	course_price: '',
 	currency: '',
 })

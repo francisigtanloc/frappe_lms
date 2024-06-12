@@ -37,11 +37,15 @@
 				<div class="font-semibold text-lg">
 					{{ quiz.data.title }}
 				</div>
+				
 				<Button
 					v-if="
-						!quiz.data.max_attempts ||
-						attempts.data?.length < quiz.data.max_attempts
+						(!quiz.data.max_attempts ||
+						attempts?.data.length < quiz.data.max_attempts)
+						
 					"
+					v-bind:disabled="disableThis"
+					
 					@click="startQuiz"
 					class="mt-2"
 				>
@@ -49,7 +53,8 @@
 						{{ __('Start') }}
 					</span>
 				</Button>
-				<div v-else>
+				
+				<div v-else >
 					{{
 						__(
 							'You have already exceeded the maximum number of attempts allowed for this quiz.'
@@ -284,8 +289,8 @@
 				@click="resetQuiz()"
 				class="mt-2"
 				v-if="
-					!quiz.data.max_attempts ||
-					attempts?.data.length < quiz.data.max_attempts
+					(!quiz.data.max_attempts ||
+					attempts?.data.length < quiz.data.max_attempts)
 				"
 			>
 				<span>
@@ -373,6 +378,8 @@ const user = inject('$user')
 const activeQuestion = ref(0)
 const currentQuestion = ref('')
 const selectedOptions = reactive([0, 0, 0, 0])
+const disableThis = ref(0)
+
 const showAnswers = reactive([])
 const countdownSeconds = reactive([]); // Initial countdown time in seconds
 var countdownInterval = null; // Interval ID for countdown
@@ -475,7 +482,10 @@ const attempts = createResource({
 			// submission.creation = timeAgo(submission.creation)
 			submission.idx = index + 1
 			 // Create button element
-			 
+			if(submission.percentage >= submission.passing_percentage ){
+				disableThis.value = true;
+			}
+			// alert(submission.passing_percentage)
 			// submission.button = '<button id="view_submission" data-id="x">Click me</button>'
 			// submission.button.textContent = 'Click me'; // Change the text content as needed
 			
@@ -485,30 +495,29 @@ const attempts = createResource({
 			// // Add data-id attribute to "x"
 			// submission.button.setAttribute('data-id', 'x');
 
-			submission.result = createResource({
-			url: 'frappe.client.get_list',
-			makeParams(values) {
-				return {
-					doctype: 'LMS Quiz Result',
-					filters: {
-					},
-					fields: [
-						'name'
-					],
-					order_by: 'creation desc',
-				}
-			},
-			transform(data) {
+			// submission.result = createResource({
+			// url: 'frappe.client.get_list',
+			// makeParams(values) {
+			// 	return {
+			// 		doctype: 'LMS Quiz Result',
+			// 		filters: {
+			// 		},
+			// 		fields: [
+			// 			'name'
+			// 		],
+			// 		order_by: 'creation desc',
+			// 	}
+			// },
+			// transform(data) {
 				
-			},
-			})
+			// },
+			// })
 
 
 			
 		})
 	},
 })
-console.log(attempts);
 
 watch(
 	() => quiz.data,
@@ -519,6 +528,8 @@ watch(
 		}
 	}
 )
+
+
 
 
 const quizSubmission = createResource({

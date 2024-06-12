@@ -20,6 +20,19 @@
 		</Tooltip>
 		<div class="flex mt-4">
 			<Link
+				v-model="lesson"
+				class="flex-1"
+				doctype="Course Lesson"
+				:label="__('Prerequisite')"
+			/>
+			<Button @click="addQuiz()" class="self-end ml-2">
+				<template #icon>
+					<Plus class="h-4 w-4 stroke-1.5" />
+				</template>
+			</Button>
+		</div>
+		<div class="flex mt-4">
+			<Link
 				v-model="quiz"
 				class="flex-1"
 				doctype="LMS Quiz"
@@ -97,6 +110,7 @@ import { Plus, FileText, Info } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import YouTubeExplanation from '@/components/Modals/YouTubeExplanation.vue'
 
+const lesson = ref(null)
 const quiz = ref(null)
 const file = ref(null)
 const lessonEditor = ref(null)
@@ -121,6 +135,7 @@ const addQuiz = () => {
 		quiz.value = null
 	}
 }
+
 
 const addFile = (data) => {
 	getCurrentEditor().caret.setToLastBlock('end', 0)

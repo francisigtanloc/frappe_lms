@@ -24,6 +24,7 @@
   "section_break_7",
   "published",
   "published_on",
+  "is_linear",
   "column_break_10",
   "upcoming",
   "column_break_12",
@@ -247,6 +248,12 @@
    "fieldname": "published_on",
    "fieldtype": "Date",
    "label": "Published On"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_linear",
+   "fieldtype": "Check",
+   "label": "Is Linear"
   }
  ],
  "is_published_field": "published",
@@ -273,7 +280,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-05-08 15:11:07.833094",
+ "modified": "2024-06-12 07:35:08.747849",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS Course",

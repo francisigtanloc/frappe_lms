@@ -13,6 +13,12 @@
 				<div class="py-5">
 					<div class="w-5/6 mx-auto">
 						<FormControl v-model="lesson.title" label="Title" class="mb-4" />
+						<!-- <Link
+							label="Prerequisite"
+							doctype="Lesson Reference"
+							v-model="prerequisite"
+							:filters="{ }"
+						/> -->
 						<FormControl
 							v-model="lesson.include_in_preview"
 							type="checkbox"
@@ -83,6 +89,7 @@ import LessonPlugins from '@/components/LessonPlugins.vue'
 import { getEditorTools } from '../utils'
 import { ChevronRight } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
+import Link from '@/components/Controls/Link.vue'
 
 const editor = ref(null)
 const instructorEditor = ref(null)
@@ -168,7 +175,7 @@ const lessonDetails = createResource({
 		}
 	},
 })
-
+const prerequisite = ref()
 const newLessonResource = createResource({
 	url: 'frappe.client.insert',
 	makeParams(values) {

@@ -40,7 +40,7 @@
 				</DisclosureButton>
 				<DisclosurePanel>
 					<div v-for="lesson in chapter.lessons" :key="lesson.name">
-						<div class="outline-lesson pl-8 py-2">
+						<div class="outline-lesson pl-8 py-2" v-if="false">
 							<router-link
 								:to="{
 									name: allowEdit ? 'CreateLesson' : 'Lesson',
@@ -72,6 +72,13 @@
 								</div>
 							</router-link>
 						</div>
+						<div v-else class="outline-lesson pl-8 py-2 text-gray-500">
+							<div class="flex items-center text-sm leading-5">
+								
+								<Lock class="h-4 w-4 text-gray-500 stroke-1 mr-2" />
+								{{ lesson.title }} (Drip content is enabled, Please complete Lesson ... First)
+							</div>
+						</div>
 					</div>
 					<div v-if="allowEdit" class="flex mt-2 mb-4 pl-8">
 						<router-link
@@ -96,6 +103,8 @@
 			</Disclosure>
 		</div>
 	</div>
+
+	
 	<ChapterModal
 		v-model="showChapterModal"
 		v-model:outline="outline"
@@ -113,6 +122,7 @@ import {
 	HelpCircle,
 	FileText,
 	Check,
+	Lock
 } from 'lucide-vue-next'
 import { useRoute } from 'vue-router'
 import ChapterModal from '@/components/Modals/ChapterModal.vue'
@@ -151,6 +161,17 @@ const outline = createResource({
 	params: {
 		course: props.courseName,
 		progress: props.getProgress,
+		drip_content: props.dripContent,
+	},
+	auto: true,
+});
+
+
+const course = createResource({
+	url: 'lms.lms.utils.get_course_details',
+	cache: ['course', props.courseName],
+	params: {
+		course: props.courseName,
 	},
 	auto: true,
 })

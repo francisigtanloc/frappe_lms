@@ -227,6 +227,7 @@ const lesson = createResource({
 	},
 	auto: true,
 	onSuccess(data) {
+		 
 		if (data.membership)
 			current_lesson.submit({
 				name: data.membership.name,

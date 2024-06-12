@@ -387,3 +387,29 @@ export function getLineStartPosition(string, position) {
 
 	return position
 }
+export function dateFormat(date, format) {
+const _format = format || 'DD-MM-YYYY HH:mm:ss'
+return useDateFormat(date, _format).value
+}
+export const dateTooltipFormat = 'ddd, MMM D, YYYY h:mm A'
+export function setupListActions(data, obj = {}) {
+	if (!data.list_script) return []
+  
+	let actions = []
+	let bulkActions = []
+  
+	if (Array.isArray(data.list_script)) {
+	  data.list_script.forEach((script) => {
+		let _actions = getActionsFromListScript(script, obj)
+		actions = actions.concat(_actions.actions)
+		bulkActions = bulkActions.concat(_actions.bulk_actions)
+	  })
+	} else {
+	  let _actions = getActionsFromListScript(data.list_script, obj)
+	  actions = _actions.actions
+	  bulkActions = _actions.bulk_actions
+	}
+  
+	data.listActions = actions
+	data.bulkActions = bulkActions
+  }

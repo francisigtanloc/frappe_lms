@@ -2,8 +2,9 @@ import { createResource } from 'frappe-ui'
 
 export default function translationPlugin(app) {
 	app.config.globalProperties.__ = translate
+	window.__ = translate
 	if (!window.translatedMessages) fetchTranslations()
-}
+  }
 
 function translate(message) {
 	let translatedMessages = window.translatedMessages || {}

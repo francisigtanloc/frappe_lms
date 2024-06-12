@@ -5,9 +5,9 @@ frappe.ui.form.on("Course Chapter", {
 	onload: function (frm) {
 		frm.set_query("lesson", "lessons", function () {
 			return {
-				filters: {
-					chapter: frm.doc.name,
-				},
+				// filters: {
+				// 	chapter: frm.doc.name,
+				// },
 			};
 		});
 	},

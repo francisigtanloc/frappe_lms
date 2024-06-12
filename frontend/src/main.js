@@ -15,6 +15,15 @@ import {
 	frappeRequest,
 	resourcesPlugin,
 	pageMetaPlugin,
+	Button,
+	Input,
+	TextInput,
+	FormControl,
+	ErrorMessage,
+	Dialog,
+	Alert,
+	Badge,
+	FeatherIcon,
 } from 'frappe-ui'
 
 let pinia = createPinia()
