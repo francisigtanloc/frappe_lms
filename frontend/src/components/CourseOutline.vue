@@ -19,88 +19,88 @@
 				'shadow rounded-md pt-2 px-2': showOutline && outline.data?.length,
 			}"
 		>
-			<Disclosure
-				v-slot="{ open }"
-				v-for="(chapter, index) in outline.data"
-				:key="chapter.name"
-				:defaultOpen="openChapterDetail(chapter.idx)"
-			>
-				<DisclosureButton ref="" class="flex w-full p-2">
-					<ChevronRight
-						:class="{
-							'rotate-90 transform duration-200': open,
-							'duration-200': !open,
-							open: index == 1,
-						}"
-						class="h-4 w-4 text-gray-900 stroke-1 mr-2"
-					/>
-					<div class="text-base text-left font-medium leading-5">
-						{{ chapter.title }}
-					</div>
-				</DisclosureButton>
-				<DisclosurePanel>
-					<div v-for="lesson in chapter.lessons" :key="lesson.name">
-						<div class="outline-lesson pl-8 py-2" v-if="false">
-							<router-link
-								:to="{
-									name: allowEdit ? 'CreateLesson' : 'Lesson',
-									params: {
-										courseName: courseName,
-										chapterNumber: lesson.number.split('.')[0],
-										lessonNumber: lesson.number.split('.')[1],
-									},
-								}"
-							>
-								<div class="flex items-center text-sm leading-5">
-									<MonitorPlay
-										v-if="lesson.icon === 'icon-youtube'"
-										class="h-4 w-4 text-gray-900 stroke-1 mr-2"
-									/>
-									<HelpCircle
-										v-else-if="lesson.icon === 'icon-quiz'"
-										class="h-4 w-4 text-gray-900 stroke-1 mr-2"
-									/>
-									<FileText
-										v-else-if="lesson.icon === 'icon-list'"
-										class="h-4 w-4 text-gray-900 stroke-1 mr-2"
-									/>
-									{{ lesson.title }}
-									<Check
-										v-if="lesson.is_complete"
-										class="h-4 w-4 text-green-700 ml-2"
-									/>
-								</div>
-							</router-link>
-						</div>
-						<div v-else class="outline-lesson pl-8 py-2 text-gray-500">
-							<div class="flex items-center text-sm leading-5">
-								
-								<Lock class="h-4 w-4 text-gray-500 stroke-1 mr-2" />
-								{{ lesson.title }} (Drip content is enabled, Please complete Lesson ... First)
-							</div>
-						</div>
-					</div>
-					<div v-if="allowEdit" class="flex mt-2 mb-4 pl-8">
-						<router-link
-							:to="{
-								name: 'CreateLesson',
-								params: {
-									courseName: courseName,
-									chapterNumber: chapter.idx,
-									lessonNumber: chapter.lessons.length + 1,
-								},
-							}"
-						>
-							<Button>
-								{{ __('Add Lesson') }}
-							</Button>
-						</router-link>
-						<Button class="ml-2" @click="openChapterModal(chapter)">
-							{{ __('Edit Chapter') }}
-						</Button>
-					</div>
-				</DisclosurePanel>
-			</Disclosure>
+		<Disclosure
+            v-slot="{ open }"
+            v-for="(chapter, chapterIndex) in outline.data"
+            :key="chapter.name"
+            :defaultOpen="openChapterDetail(chapter.idx)"
+        >
+            <DisclosureButton class="flex w-full p-2">
+                <ChevronRight
+                    :class="{
+                        'rotate-90 transform duration-200': open,
+                        'duration-200': !open,
+                        open: chapterIndex === 0,
+                    }"
+                    class="h-4 w-4 text-gray-900 stroke-1 mr-2"
+                />
+                <div class="text-base text-left font-medium leading-5">
+                    {{ chapter.title }}
+                </div>
+            </DisclosureButton>
+            <DisclosurePanel>
+                <div v-for="(lesson, lessonIndex) in chapter.lessons" :key="lesson.name">
+                    <div
+                        class="outline-lesson pl-8 py-2"
+                        v-if="isLessonAccessible(chapterIndex, lessonIndex)"
+                    >
+                        <router-link
+                            :to="{
+                                name: allowEdit ? 'CreateLesson' : 'Lesson',
+                                params: {
+                                    courseName: courseName,
+                                    chapterNumber: lesson.number.split('.')[0],
+                                    lessonNumber: lesson.number.split('.')[1],
+                                },
+                            }"
+							@click.prevent="outline.data[chapterIndex].lessons[lessonIndex].is_complete = 'true'"
+                        >
+                            <div class="flex items-center text-sm leading-5">
+                                <MonitorPlay
+                                    v-if="lesson.icon === 'icon-youtube'"
+                                    class="h-4 w-4 text-gray-900 stroke-1 mr-2"
+                                />
+                                <HelpCircle
+                                    v-else-if="lesson.icon === 'icon-quiz'"
+                                    class="h-4 w-4 text-gray-900 stroke-1 mr-2"
+                                />
+                                <FileText
+                                    v-else-if="lesson.icon === 'icon-list'"
+                                    class="h-4 w-4 text-gray-900 stroke-1 mr-2"
+                                />
+                                {{ lesson.title }}
+                                
+                            </div>
+                        </router-link>
+                    </div>
+                    <div v-else class="outline-lesson pl-8 py-2 text-gray-500">
+                        <div class="flex items-center text-sm leading-5">
+                            <Lock class="h-4 w-4 text-gray-500 stroke-1 mr-2" />
+                            {{ lesson.title }} (Drip content is enabled, Please complete the previous lesson first)
+                        </div>
+                    </div>
+                </div>
+                <div v-if="allowEdit" class="flex mt-2 mb-4 pl-8">
+                    <router-link
+                        :to="{
+                            name: 'CreateLesson',
+                            params: {
+                                courseName: courseName,
+                                chapterNumber: chapter.idx,
+                                lessonNumber: chapter.lessons.length + 1,
+                            },
+                        }"
+                    >
+                        <Button>
+                            {{ __('Add Lesson') }}
+                        </Button>
+                    </router-link>
+                    <Button class="ml-2" @click="openChapterModal(chapter)">
+                        {{ __('Edit Chapter') }}
+                    </Button>
+                </div>
+            </DisclosurePanel>
+        </Disclosure>
 		</div>
 	</div>
 
@@ -179,7 +179,16 @@ const course = createResource({
 const openChapterDetail = (index) => {
 	return index == route.params.chapterNumber || index == 1
 }
-
+const isLessonAccessible = (chapterIndex, lessonIndex) => {
+	if (chapterIndex === 0 && lessonIndex === 0) return true; // First lesson of the first chapter
+	if (lessonIndex > 0 && outline.data[chapterIndex].lessons[lessonIndex - 1].is_complete) return true; // Previous lesson is complete
+	if (chapterIndex > 0 && lessonIndex === 0 && outline.data[chapterIndex - 1].lessons.every(lesson => lesson.is_complete)) return true; // All lessons in the previous chapter are complete
+	return false;
+};
+const toggleLessonComplete = (chapterIndex, lessonIndex) => {
+    const lesson = props.outline.data[chapterIndex].lessons[lessonIndex];
+    lesson.is_complete = !lesson.is_complete;
+};
 const openChapterModal = (chapter = null) => {
 	currentChapter.value = chapter
 	showChapterModal.value = true

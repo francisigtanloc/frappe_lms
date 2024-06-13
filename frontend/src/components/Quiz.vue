@@ -231,6 +231,7 @@
 						:aria-valuemax="percentTime.percent_time">
 						</div>
 					</div>
+					
 					<div class="flex items-center justify-between mt-4">
 						
 						<div class="countdown-timer">
@@ -309,6 +310,7 @@
 				:options="{ selectable: false, showTooltip: false }"
 			>
 			</ListView>
+			
 			<div>
 				<table>
 				<thead>
